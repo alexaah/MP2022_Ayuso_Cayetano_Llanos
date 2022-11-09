@@ -145,7 +145,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a316ac00-9a3d-4694-b94d-b00c92fce4fa"
+						"spark.autotune.trackingId": "db887f31-b444-4e7f-8cf1-f47aba757bd4"
 					}
 				},
 				"metadata": {
@@ -184,7 +184,7 @@
 							"horoscope.show()"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 51
 					},
 					{
 						"cell_type": "code",
@@ -204,7 +204,7 @@
 							"countries.show()"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 52
 					},
 					{
 						"cell_type": "code",
@@ -224,7 +224,7 @@
 							"userIds.show()"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 53
 					},
 					{
 						"cell_type": "code",
@@ -244,7 +244,7 @@
 							"userLogs.show()"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 54
 					},
 					{
 						"cell_type": "code",
@@ -263,12 +263,10 @@
 							"var horoscope_dates = horoscope.map(line => line.getString(0)).map(line => line.split(\" - \"))\r\n",
 							"horoscope_dates.take(10)\r\n",
 							"var horoscope_signs = horoscope.map(line => line.getString(8)).collect()\r\n",
-							"horoscope_signs.take(10)\r\n",
-							"\r\n",
-							""
+							"horoscope_signs.take(10)"
 						],
 						"outputs": [],
-						"execution_count": 49
+						"execution_count": 55
 					},
 					{
 						"cell_type": "code",
@@ -284,10 +282,11 @@
 							}
 						},
 						"source": [
-							""
+							"var countriesWithoutNull = countries.filter(line => line.getString(5) != null)\r\n",
+							"countriesWithoutNull.show()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 58
 					}
 				]
 			},
