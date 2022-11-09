@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8e6cf2b6-822d-4504-8699-28d188de18a2"
+				"spark.autotune.trackingId": "8dac3609-a9f5-4b2b-9a32-9df25a4dc225"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"var horoscope = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://fstcpractica2@dlaccounttcpractica2.dfs.core.windows.net/horoscope.csv\")\r\n",
 					"horoscope.show()"
 				],
-				"execution_count": 3
+				"execution_count": 51
 			},
 			{
 				"cell_type": "code",
@@ -74,7 +74,7 @@
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://fstcpractica2@dlaccounttcpractica2.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
 				],
-				"execution_count": 4
+				"execution_count": 52
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +93,7 @@
 					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://fstcpractica2@dlaccounttcpractica2.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\")\r\n",
 					"userIds.show()"
 				],
-				"execution_count": 5
+				"execution_count": 53
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"var userLogs = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://fstcpractica2@dlaccounttcpractica2.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\")\r\n",
 					"userLogs.show()"
 				],
-				"execution_count": 6
+				"execution_count": 54
 			},
 			{
 				"cell_type": "code",
@@ -131,11 +131,9 @@
 					"var horoscope_dates = horoscope.map(line => line.getString(0)).map(line => line.split(\" - \"))\r\n",
 					"horoscope_dates.take(10)\r\n",
 					"var horoscope_signs = horoscope.map(line => line.getString(8)).collect()\r\n",
-					"horoscope_signs.take(10)\r\n",
-					"\r\n",
-					""
+					"horoscope_signs.take(10)"
 				],
-				"execution_count": 49
+				"execution_count": 55
 			},
 			{
 				"cell_type": "code",
@@ -151,9 +149,10 @@
 					}
 				},
 				"source": [
-					""
+					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null)\r\n",
+					"countriesWithoutNull.show()"
 				],
-				"execution_count": null
+				"execution_count": 58
 			}
 		]
 	}
