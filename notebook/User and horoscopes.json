@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ba2b9df6-41cb-4aab-bd20-0c94f2b047ad"
+				"spark.autotune.trackingId": "c6f1e5bf-802d-4b8b-9a4e-4d86fd1baf1e"
 			}
 		},
 		"metadata": {
@@ -350,6 +350,195 @@
 					""
 				],
 				"execution_count": 86
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"val getSignudf = udf(getSign _)"
+				],
+				"execution_count": 99
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(horoscope_clean)"
+				],
+				"execution_count": 132
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"\r\n",
+					"var horoscope_clean_date = horoscope_clean.withColumn(\"date1\", to_date($\"date1\", \"dd/MM\")).withColumn(\"date2\", to_date($\"date2\", \"dd/MM\"))\r\n",
+					"display(horoscope_clean_date)"
+				],
+				"execution_count": 137
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"import org.apache.spark.sql.expressions.UserDefinedFunction\r\n",
+					"import org.apache.spark.sql.functions.udf\r\n",
+					"\r\n",
+					"def getSign(date: Date) : String = {\r\n",
+					"\r\n",
+					"    val format = new java.text.SimpleDateFormat(\"dd/MM\")\r\n",
+					"\r\n",
+					"    val outputFormat = new SimpleDateFormat(\"dd/MM\")\r\n",
+					"\r\n",
+					"\r\n",
+					"    var dateString = outputFormat.format(date)\r\n",
+					"\r\n",
+					"    var dateFormat = format.parse(dateString)\r\n",
+					"\r\n",
+					"    var dffilter = horoscope_clean.filter(line => dateFormat.after(format.parse(line.getString(1))) && dateFormat.before(format.parse(line.getString(2))))\r\n",
+					"\r\n",
+					"    var result = dffilter.head.get(0).toString\r\n",
+					"\r\n",
+					"     return result\r\n",
+					"}"
+				],
+				"execution_count": 146
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"val getSignUdf = udf(getSign _)"
+				],
+				"execution_count": 143
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"userId_clean_date.printSchema"
+				],
+				"execution_count": 144
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import org.apache.spark.sql.functions._\r\n",
+					"val newcol = udf(getSign _).apply(col(\"registered\"))\r\n",
+					"var user_sign = userId_clean_date.withColumn(\"sign\", newcol)"
+				],
+				"execution_count": 153
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": 155
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"var user_sign = userId_clean_date.withColumn(\"sign\", getSignUdf(col(\"registered\")))\r\n",
+					"display(user_sign)"
+				],
+				"execution_count": 145
 			}
 		]
 	}
