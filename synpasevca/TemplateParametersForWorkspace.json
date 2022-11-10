@@ -8,6 +8,12 @@
 		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
+		"HiveDatabase_connectionString": {
+			"value": ""
+		},
+		"MysqlDatabase_connectionString": {
+			"value": ""
+		},
 		"synpasevca-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
