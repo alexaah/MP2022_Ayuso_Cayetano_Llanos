@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "vcaSparkpool",
+			"referenceName": "aahsynapsepool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4e52493b-0efb-4880-8bf1-b92a201514a8"
+				"spark.autotune.trackingId": "32d393b2-3127-4e0d-b0d4-94463b0676cc"
 			}
 		},
 		"metadata": {
@@ -31,10 +31,10 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/vcaSparkpool",
-				"name": "vcaSparkpool",
+				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aahsynapsepool",
+				"name": "aahsynapsepool",
 				"type": "Spark",
-				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/vcaSparkpool",
+				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aahsynapsepool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -74,10 +74,10 @@
 					"collapsed": false
 				},
 				"source": [
-					"var userGroupsWithoutNull = userGroups.filter(line => line.getString(0) != null && line.getString(3) != null && line.getString(5) != null)\r\n",
+					"var userGroupsWithoutNull = userGroups.filter(line => line.getString(0) != null && line.getString(3) != null && line.getString(5) != null).withColumnRenamed(\"_c0\", \"user_id\").withColumnRenamed(\"_c3\", \"group\").withColumnRenamed(\"_c5\", \"song\")\r\n",
 					"display(userGroupsWithoutNull)"
 				],
-				"execution_count": 22
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -94,10 +94,10 @@
 					"collapsed": false
 				},
 				"source": [
-					"var userGroupsSelect = userGroupsWithoutNull.select(\"_c0\", \"_c3\", \"_c5\")\r\n",
+					"var userGroupsSelect = userGroupsWithoutNull.select(\"user_id\", \"group\", \"song\")\r\n",
 					"display(userGroupsSelect)"
 				],
-				"execution_count": 25
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -115,7 +115,7 @@
 				"source": [
 					""
 				],
-				"execution_count": null
+				"execution_count": 10
 			}
 		]
 	}
