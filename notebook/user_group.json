@@ -1,5 +1,5 @@
 {
-	"name": "user",
+	"name": "user_group",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -8,17 +8,16 @@
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
-			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "bc2ec4d6-1e08-47d1-9b67-f6586852eb60"
+				"spark.autotune.trackingId": "4e52493b-0efb-4880-8bf1-b92a201514a8"
 			}
 		},
 		"metadata": {
@@ -51,30 +50,14 @@
 		"cells": [
 			{
 				"cell_type": "code",
-				"source": [
-					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
-					"userIds.take(10)"
-				],
-				"execution_count": 2
-			},
-			{
-				"cell_type": "code",
 				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
+					"collapsed": false
 				},
 				"source": [
-					"var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
-					"userIdWithoutNull.show()"
+					"var userGroups = spark.sqlContext.read.option(\"header\", \"false\").option(\"delimiter\", \"\\t\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\")\r\n",
+					"display(userGroups)"
 				],
-				"execution_count": 3
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -91,12 +74,48 @@
 					"collapsed": false
 				},
 				"source": [
-					"var userIdWithBadDate = userIdWithoutNull.select(\"#id\",\"country\",\"registered\")\r\n",
-					"spark.sql(\"set spark.sql.legacy.timeParserPolicy=LEGACY\")\r\n",
-					"var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd-MM-yyyy\"))\r\n",
-					"display(userId_clean)"
+					"var userGroupsWithoutNull = userGroups.filter(line => line.getString(0) != null && line.getString(3) != null && line.getString(5) != null)\r\n",
+					"display(userGroupsWithoutNull)"
 				],
-				"execution_count": 4
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"var userGroupsSelect = userGroupsWithoutNull.select(\"_c0\", \"_c3\", \"_c5\")\r\n",
+					"display(userGroupsSelect)"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
 			}
 		]
 	}

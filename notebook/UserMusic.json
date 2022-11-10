@@ -18,18 +18,18 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ffb54fc0-6727-45b7-a089-87a05b4c9c09"
+				"spark.autotune.trackingId": "d800973b-0b5d-497e-80fa-722d6833fa24"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
 			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "python"
+				"name": "synapse_spark",
+				"display_name": "Synapse Spark"
 			},
 			"language_info": {
-				"name": "python"
+				"name": "scala"
 			},
 			"a365ComputeOptions": {
 				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/vcaSparkpool",
@@ -55,7 +55,7 @@
 					"var userLogs = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\")\r\n",
 					"userLogs.show()"
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
