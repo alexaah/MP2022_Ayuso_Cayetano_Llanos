@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "vcaSparkpool",
+			"referenceName": "aitorsparkpool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6ba0580f-4eb8-4702-b387-25bc3c4d5b5c"
+				"spark.autotune.trackingId": "10576451-30c4-453d-9366-b206a96b29d8"
 			}
 		},
 		"metadata": {
@@ -26,16 +26,16 @@
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
-				"display_name": "python"
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
-				"name": "python"
+				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/vcaSparkpool",
-				"name": "vcaSparkpool",
+				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aitorsparkpool",
+				"name": "aitorsparkpool",
 				"type": "Spark",
-				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/vcaSparkpool",
+				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aitorsparkpool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -55,7 +55,7 @@
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -68,13 +68,14 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
-					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null && line.getString(0) != null)\r\n",
-					"countriesWithoutNull.show()"
+					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null && line.getString(0) != null).toDF().select(\"country\", \"continent\")\r\n",
+					"display(countriesWithoutNull)"
 				],
-				"execution_count": null
+				"execution_count": 2
 			}
 		]
 	}
