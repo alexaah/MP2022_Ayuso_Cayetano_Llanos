@@ -14,14 +14,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "65a6670d-4aaf-41f5-88c8-53af0d8abda6"
+				"spark.autotune.trackingId": "45ac3b8d-7430-476e-b538-e766552687f5"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -33,12 +30,6 @@
 			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
-			{
-				"cell_type": "code",
-				"source": [
-					""
-				]
-			},
 			{
 				"cell_type": "code",
 				"metadata": {
@@ -55,7 +46,8 @@
 				"source": [
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -73,7 +65,8 @@
 				"source": [
 					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
 					"userIds.take(10)"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -91,7 +84,8 @@
 				"source": [
 					"var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
 					"userIdWithoutNull.show()"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +103,8 @@
 				"source": [
 					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null)\r\n",
 					"countriesWithoutNull.show()"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -127,7 +122,8 @@
 				"source": [
 					"var countriesDF = countriesWithoutNull.toDF()\r\n",
 					"countriesDF.show()"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -145,7 +141,8 @@
 				"source": [
 					"var userIdDF = userIdWithoutNull.toDF()\r\n",
 					"userIdDF.show()"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +160,8 @@
 				"source": [
 					"var countries_join = userIdDF.join(countriesDF).filter(userIdDF(\"country\") === countriesDF(\"country\"))\r\n",
 					"display(countries_join)"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -181,7 +179,8 @@
 				"source": [
 					"var continentPerUser = countries_join.map(line =>  (line.getString(0),line.getString(10)))\r\n",
 					"continentPerUser.show()"
-				]
+				],
+				"execution_count": null
 			}
 		]
 	}
