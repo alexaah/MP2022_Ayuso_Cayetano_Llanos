@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8e8a6dcc-7d6d-4e81-a711-43fe78939833"
+				"spark.autotune.trackingId": "5286a065-220e-4b39-87b9-130e1c4cebdd"
 			}
 		},
 		"metadata": {
@@ -51,9 +51,12 @@
 		"cells": [
 			{
 				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
 				"source": [
 					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
-					"userIds.take(10)"
+					"display(userIds)"
 				],
 				"execution_count": 4
 			},
@@ -68,13 +71,14 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
-					"userIdWithoutNull.show()"
+					"display(userIdWithoutNull)"
 				],
-				"execution_count": 5
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -93,10 +97,10 @@
 				"source": [
 					"var userIdWithBadDate = userIdWithoutNull.select(\"#id\",\"country\",\"registered\")\r\n",
 					"spark.sql(\"set spark.sql.legacy.timeParserPolicy=LEGACY\")\r\n",
-					"var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd-MM-yyyy\"))\r\n",
+					"var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd/MM/yyyy\"))\r\n",
 					"display(userId_clean)"
 				],
-				"execution_count": 6
+				"execution_count": 11
 			}
 		]
 	}
