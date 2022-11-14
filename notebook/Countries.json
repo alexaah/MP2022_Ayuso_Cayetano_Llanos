@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "10576451-30c4-453d-9366-b206a96b29d8"
+				"spark.autotune.trackingId": "66709028-8912-469a-a1a2-7002100befc3"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
 				],
-				"execution_count": 1
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -72,10 +72,46 @@
 					"collapsed": false
 				},
 				"source": [
-					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null && line.getString(0) != null).toDF().select(\"country\", \"continent\")\r\n",
+					"var countriesWithoutNull = countries.distinct().filter(line => line.getString(5) != null && line.getString(0) != null).toDF().select(\"country\", \"continent\")\r\n",
 					"display(countriesWithoutNull)"
 				],
-				"execution_count": 2
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"countriesWithoutNull.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"continentsPerCountries\").saveAsTable(\"continentsPerCountries\")"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.sql(\"Select * from continentsPerCountries\").show()"
+				],
+				"execution_count": 8
 			}
 		]
 	}

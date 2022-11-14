@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "aahsynapsepool",
+			"referenceName": "aitorsparkpool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b3bb1c66-0fc8-4f5c-95aa-546e69d46428"
+				"spark.autotune.trackingId": "6bda2dc3-9279-43ac-831f-21429f54aea0"
 			}
 		},
 		"metadata": {
@@ -32,10 +32,10 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aahsynapsepool",
-				"name": "aahsynapsepool",
+				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aitorsparkpool",
+				"name": "aitorsparkpool",
 				"type": "Spark",
-				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aahsynapsepool",
+				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aitorsparkpool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -66,7 +66,8 @@
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
 				],
-				"execution_count": 1
+				"execution_count": 35
+
 			},
 			{
 				"cell_type": "code",
@@ -85,7 +86,8 @@
 					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
 					"userIds.take(10)"
 				],
-				"execution_count": 2
+				"execution_count": 36
+
 			},
 			{
 				"cell_type": "code",
@@ -104,7 +106,8 @@
 					"var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
 					"userIdWithoutNull.show()"
 				],
-				"execution_count": 3
+				"execution_count": 37
+
 			},
 			{
 				"cell_type": "code",
@@ -123,7 +126,8 @@
 					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null)\r\n",
 					"countriesWithoutNull.show()"
 				],
-				"execution_count": 4
+				"execution_count": 38
+
 			},
 			{
 				"cell_type": "code",
@@ -145,7 +149,8 @@
 					"var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd-MM-yyyy\"))\r\n",
 					"display(userId_clean)"
 				],
-				"execution_count": 5
+				"execution_count": 39
+
 			},
 			{
 				"cell_type": "code",
@@ -164,7 +169,8 @@
 					"var countriesDF = countriesWithoutNull.toDF()\r\n",
 					"countriesDF.show()"
 				],
-				"execution_count": 6
+				"execution_count": 40
+
 			},
 			{
 				"cell_type": "code",
@@ -183,7 +189,8 @@
 					"var userIdDF = userId_clean.toDF()\r\n",
 					"userIdDF.show()"
 				],
-				"execution_count": 7
+				"execution_count": 41
+
 			},
 			{
 				"cell_type": "code",
@@ -203,7 +210,8 @@
 					"var countries_join = userIdDF.join(countriesDF).filter(userIdDF(\"country\") === countriesDF(\"country\"))\r\n",
 					"display(countries_join)"
 				],
-				"execution_count": 8
+				"execution_count": 42
+
 			},
 			{
 				"cell_type": "code",
@@ -220,10 +228,64 @@
 					"collapsed": false
 				},
 				"source": [
-					"var continentPerUser = countries_join.map(line =>  (line.getString(0),line.getString(8), line.getString(3), line.getString(2))).withColumnRenamed(\"_1\", \"User\").withColumnRenamed(\"_2\", \"Continent\").withColumnRenamed(\"_3\", \"Country\").withColumnRenamed(\"_4\", \"Date Registered\")\r\n",
+					"var continentPerUser = countries_join.map(line =>  (line.getString(0),line.getString(8), line.getString(3), line.getString(2))).withColumnRenamed(\"_1\", \"User\").withColumnRenamed(\"_2\", \"Continent\").withColumnRenamed(\"_3\", \"Country\").withColumnRenamed(\"_4\", \"Date_Registered\")\r\n",
 					"display(continentPerUser)"
 				],
-				"execution_count": 9
+				"execution_count": 43
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"continentPerUser.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"continentPerUser\").saveAsTable(\"continentPerUser\")"
+				],
+				"execution_count": 44
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.sql(\"Select * from continentPerUser\").show()"
+				],
+				"execution_count": 46
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": 49
 			}
 		]
 	}
