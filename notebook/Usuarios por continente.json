@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "aitorsparkpool",
+			"referenceName": "aahsynapsepool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,24 +18,24 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6bda2dc3-9279-43ac-831f-21429f54aea0"
+				"spark.autotune.trackingId": "58f9755f-3465-4522-86f8-d060b85f712f"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
 			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
+				"name": "synapse_spark",
+				"display_name": "scala"
 			},
 			"language_info": {
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aitorsparkpool",
-				"name": "aitorsparkpool",
+				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aahsynapsepool",
+				"name": "aahsynapsepool",
 				"type": "Spark",
-				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aitorsparkpool",
+				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aahsynapsepool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -67,7 +67,6 @@
 					"countries.show()"
 				],
 				"execution_count": 35
-
 			},
 			{
 				"cell_type": "code",
@@ -87,7 +86,6 @@
 					"userIds.take(10)"
 				],
 				"execution_count": 36
-
 			},
 			{
 				"cell_type": "code",
@@ -107,7 +105,6 @@
 					"userIdWithoutNull.show()"
 				],
 				"execution_count": 37
-
 			},
 			{
 				"cell_type": "code",
@@ -127,7 +124,6 @@
 					"countriesWithoutNull.show()"
 				],
 				"execution_count": 38
-
 			},
 			{
 				"cell_type": "code",
@@ -150,7 +146,6 @@
 					"display(userId_clean)"
 				],
 				"execution_count": 39
-
 			},
 			{
 				"cell_type": "code",
@@ -170,7 +165,6 @@
 					"countriesDF.show()"
 				],
 				"execution_count": 40
-
 			},
 			{
 				"cell_type": "code",
@@ -190,7 +184,6 @@
 					"userIdDF.show()"
 				],
 				"execution_count": 41
-
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +204,6 @@
 					"display(countries_join)"
 				],
 				"execution_count": 42
-
 			},
 			{
 				"cell_type": "code",
