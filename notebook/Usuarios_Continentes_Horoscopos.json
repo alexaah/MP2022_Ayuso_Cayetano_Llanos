@@ -1,0 +1,424 @@
+{
+	"name": "Usuarios_Continentes_Horoscopos",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "vcaSparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "28e9c4ae-4c2b-48f9-9c2f-73f841417d63"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_spark",
+				"display_name": "Synapse Spark"
+			},
+			"language_info": {
+				"name": "scala"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/vcaSparkpool",
+				"name": "vcaSparkpool",
+				"type": "Spark",
+				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/vcaSparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.2",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"// DATAFRAME HOROSCOPOS\r\n",
+					"var horoscope = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/horoscope.csv\")\r\n",
+					"display(horoscope)"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// HOROSCOPOS: seleccion de columnas 'sign' y 'date_range'\r\n",
+					"var horoscope_sign = horoscope.select(\"sign\",\"date_range\")\r\n",
+					"display(horoscope_sign)"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// HOROSCOPOS: division de columna 'date_range' en dos fechas\r\n",
+					"import org.apache.spark.sql.functions.split\r\n",
+					"var horoscope_dates = horoscope_sign.select($\"sign\",\r\n",
+					"split($\"date_range\",\" - \")(0).alias(\"date1\"),\r\n",
+					"split($\"date_range\",\" - \")(1).alias(\"date2\")).distinct()\r\n",
+					"display(horoscope_dates)"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// HOROSCOPOS: formato rango de fechas a 'dd/MM'\r\n",
+					"var horoscope_clean = horoscope_dates.withColumn(\"date1\",date_format(to_date(col(\"date1\"),\"MMM dd\"), \"dd/MM\")).withColumn(\"date2\",date_format(to_date(col(\"date2\"),\"MMM dd\"), \"dd/MM\"))\r\n",
+					"display(horoscope_clean)"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"// DATAFRAME COUNTRIES AND CONTINENTS\r\n",
+					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
+					"countries.show()"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"// COUNTRIES: Eliminamos nulos\r\n",
+					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null)\r\n",
+					"countriesWithoutNull.show()"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"// COUNTRIES: Convertimos a DF\r\n",
+					"var countriesDF = countriesWithoutNull.toDF()\r\n",
+					"countriesDF.show()"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// DATAFRAME USUARIOS\r\n",
+					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
+					"display(userIds)"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"// USUARIOS: eliminamos nulos\r\n",
+					"var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
+					"userIdWithoutNull.show()"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// USUARIOS: seleccionamos columnas id, country, registered\r\n",
+					"var userIdWithBadDate = userIdWithoutNull.select(\"#id\",\"country\",\"registered\")\r\n",
+					"display(userIdWithBadDate)"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// USUARIOS: formato fecha de registro\r\n",
+					"spark.sql(\"set spark.sql.legacy.timeParserPolicy=LEGACY\")\r\n",
+					"var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd/MM/yyyy\"))\r\n",
+					"display(userId_clean)"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"// USUARIOS: convertimos a DF\r\n",
+					"var userIdDF = userId_clean.toDF()\r\n",
+					"userIdDF.show()"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// JOIN COUNTRIES AND USER\r\n",
+					"var countries_join = userIdDF.join(countriesDF).filter(userIdDF(\"country\") === countriesDF(\"country\"))\r\n",
+					"display(countries_join)"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// CONTINENTES POR USUARIOS\r\n",
+					"var continentPerUser = countries_join.map(line =>  (line.getString(0),line.getString(8), line.getString(3), line.getString(2))).withColumnRenamed(\"_1\", \"User\").withColumnRenamed(\"_2\", \"Continent\").withColumnRenamed(\"_3\", \"Country\").withColumnRenamed(\"_4\", \"Date Registered\")\r\n",
+					"display(continentPerUser)"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"// FUNCION: dada uan fecha de registro nos devuelve el horoscopo que corresponde\r\n",
+					"import java.util.Date\r\n",
+					"import java.text.SimpleDateFormat\r\n",
+					"def getSignNew(dateString: String) : String = {\r\n",
+					"    val format = new java.text.SimpleDateFormat(\"dd/MM\")\r\n",
+					"\r\n",
+					"    val outputFormat = new SimpleDateFormat(\"dd/MM\")\r\n",
+					"\r\n",
+					"    var date = format.parse(dateString)\r\n",
+					"\r\n",
+					"\r\n",
+					"    if(null != date && null != date.getMonth && null != date.getDate && date.getMonth == 11 && date.getDate >= 22){\r\n",
+					"      return \"capricorn\"\r\n",
+					"    } else if(null != date && null != date.getMonth && null != date.getDate && date.getMonth == 0 && date.getDate <= 19){\r\n",
+					"         return \"capricorn\"\r\n",
+					"    } else if (null != date && null != date.getMonth && null != date.getDate){\r\n",
+					"         var result =  horoscope_clean.collect.find(obj => (date.after(format.parse(obj(1).toString)) || date.equals(format.parse(obj(1).toString))) && (date.before(format.parse(obj(2).toString)) || date.equals(format.parse(obj(2).toString))))\r\n",
+					"        return result.get(0).toString\r\n",
+					"    } else {\r\n",
+					"        return \"\"\r\n",
+					"    }\r\n",
+					"\r\n",
+					"\r\n",
+					"}"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"// Convertimos a Array de rows, aplicando la funcion anterior\r\n",
+					"import org.apache.spark.sql.Row\r\n",
+					"var user_sign = continentPerUser.collect().map(line => Row(line(0), line(1), line(2), getSignNew(line(3).toString)))\r\n",
+					"user_sign"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"// Convertimos a DataFrame\r\n",
+					"var rdd = sc.makeRDD(user_sign)\r\n",
+					"case class X(id: String, continent: String, country: String, sign: String )\r\n",
+					"var user_country_sign=rdd.map{\r\n",
+					"    case Row(s0,s1,s2,s3)=>X(s0.asInstanceOf[String],s1.asInstanceOf[String],s2.asInstanceOf[String],s3.asInstanceOf[String])\r\n",
+					"  }.toDF()\r\n",
+					"display(user_country_sign)"
+				],
+				"execution_count": 21
+			}
+		]
+	}
+}
