@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "aitorsparkpool",
+			"referenceName": "aahsynapsepool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fc1b59f1-933d-4956-96d5-b97583044716"
+				"spark.autotune.trackingId": "a0529a61-0aab-4b9f-9057-949ca6dab07e"
 			}
 		},
 		"metadata": {
@@ -32,10 +32,10 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aitorsparkpool",
-				"name": "aitorsparkpool",
+				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aahsynapsepool",
+				"name": "aahsynapsepool",
 				"type": "Spark",
-				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aitorsparkpool",
+				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aahsynapsepool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -52,10 +52,10 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"var userLogs = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"false\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\").toDF(\"id\",\"date\",\"idgroup\",\"group\",\"idsong\",\"song\")\r\n",
+					"var userLogs = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"false\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\").toDF(\"#id\",\"date\",\"idgroup\",\"group\",\"idsong\",\"song\")\r\n",
 					"userLogs.show()"
 				],
-				"execution_count": 43
+				"execution_count": 134
 			},
 			{
 				"cell_type": "code",
@@ -74,7 +74,7 @@
 					"var userLogsWithoutNull = userLogs.filter(line => line.getString(0) != null && line.getString(2) != null && line.getString(4) != null)\r\n",
 					"userLogsWithoutNull.show()"
 				],
-				"execution_count": 44
+				"execution_count": 135
 			},
 			{
 				"cell_type": "code",
@@ -90,29 +90,9 @@
 					}
 				},
 				"source": [
-					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
-					"userIds.take(10)"
+					"//userLogsDF = userLogsWithoutNull.toDF()"
 				],
-				"execution_count": 45
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
-					"userIdWithoutNull.show()"
-				],
-				"execution_count": 46
+				"execution_count": 136
 			},
 			{
 				"cell_type": "code",
@@ -129,50 +109,10 @@
 					"collapsed": false
 				},
 				"source": [
-					"var userIdWithBadDate = userIdWithoutNull.select(\"#id\",\"country\",\"registered\")\r\n",
-					"spark.sql(\"set spark.sql.legacy.timeParserPolicy=LEGACY\")\r\n",
-					"var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd-MM-yyyy\"))\r\n",
-					"display(userId_clean)"
+					"var user_country_sign = spark.sql(\"Select * from Usuarios_Continentes_Horoscopos\")\r\n",
+					"display(user_country_sign)"
 				],
-				"execution_count": 47
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"var userIdDF = userId_clean.toDF()\r\n",
-					"userIdDF.show()"
-				],
-				"execution_count": 48
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"var userLogsDF = userLogsWithoutNull.toDF()\r\n",
-					"userLogsDF.show()"
-				],
-				"execution_count": 49
+				"execution_count": 137
 			},
 			{
 				"cell_type": "code",
@@ -189,10 +129,30 @@
 					"collapsed": false
 				},
 				"source": [
-					"var users_final_table = userIdDF.join(userLogsDF).filter(userIdDF(\"#id\") === userLogsDF(\"id\")).select(\"id\", \"group\", \"song\", \"registered\")\r\n",
+					"var userGroupsJoin = user_country_sign.join(userLogs).filter(user_country_sign(\"id\") === userLogs(\"#id\"))\r\n",
+					"display(userGroupsJoin)"
+				],
+				"execution_count": 138
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"var users_final_table = userGroupsJoin.select(\"id\", \"group\", \"song\", \"sign\")\r\n",
 					"display(users_final_table)"
 				],
-				"execution_count": 50
+				"execution_count": 149
 			},
 			{
 				"cell_type": "code",
@@ -208,9 +168,28 @@
 					}
 				},
 				"source": [
-					"users_final_table.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"usersMusic\").saveAsTable(\"usersMusic\")"
+					"users_final_table.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"userMusic\").saveAsTable(\"userMusic\")"
 				],
-				"execution_count": 51
+				"execution_count": 150
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(spark.sql(\"Select * from userMusic where id == 'user_000002'\"))"
+				],
+				"execution_count": 163
 			},
 			{
 				"cell_type": "code",
@@ -226,9 +205,145 @@
 					}
 				},
 				"source": [
-					"spark.sql(\"Select * from usersMusic\").show()"
+					"//var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
+					"//userIds.take(10)"
 				],
-				"execution_count": 53
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"//var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
+					"//userIdWithoutNull.show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"//var userIdWithBadDate = userIdWithoutNull.select(\"#id\",\"country\",\"registered\")\r\n",
+					"//spark.sql(\"set spark.sql.legacy.timeParserPolicy=LEGACY\")\r\n",
+					"//var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd-MM-yyyy\"))\r\n",
+					"//display(userId_clean)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"//var userIdDF = userId_clean.toDF()\r\n",
+					"//userIdDF.show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"//var userLogsDF = userLogsWithoutNull.toDF()\r\n",
+					"//userLogsDF.show()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"//var users_final_table = userIdDF.join(userLogsDF).filter(userIdDF(\"#id\") === userLogsDF(\"id\")).select(\"id\", \"group\", \"song\", \"registered\")\r\n",
+					"//display(users_final_table)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"//users_final_table.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"usersMusic\").saveAsTable(\"usersMusic\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"//spark.sql(\"Select * from usersMusic\").show()"
+				],
+				"execution_count": null
 			}
 		]
 	}
