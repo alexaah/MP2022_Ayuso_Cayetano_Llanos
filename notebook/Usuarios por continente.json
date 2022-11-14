@@ -67,6 +67,7 @@
 					"countries.show()"
 				],
 				"execution_count": 35
+
 			},
 			{
 				"cell_type": "code",
@@ -86,6 +87,7 @@
 					"userIds.take(10)"
 				],
 				"execution_count": 36
+
 			},
 			{
 				"cell_type": "code",
@@ -105,6 +107,7 @@
 					"userIdWithoutNull.show()"
 				],
 				"execution_count": 37
+
 			},
 			{
 				"cell_type": "code",
@@ -124,6 +127,7 @@
 					"countriesWithoutNull.show()"
 				],
 				"execution_count": 38
+
 			},
 			{
 				"cell_type": "code",
@@ -146,6 +150,7 @@
 					"display(userId_clean)"
 				],
 				"execution_count": 39
+
 			},
 			{
 				"cell_type": "code",
@@ -165,6 +170,7 @@
 					"countriesDF.show()"
 				],
 				"execution_count": 40
+
 			},
 			{
 				"cell_type": "code",
@@ -184,6 +190,7 @@
 					"userIdDF.show()"
 				],
 				"execution_count": 41
+
 			},
 			{
 				"cell_type": "code",
@@ -204,6 +211,7 @@
 					"display(countries_join)"
 				],
 				"execution_count": 42
+
 			},
 			{
 				"cell_type": "code",
