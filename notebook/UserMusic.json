@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c0c6de81-bdfe-4e8a-866c-0a188b7cf8f2"
+				"spark.autotune.trackingId": "a400542f-204c-4872-ac5b-f20ea189f41e"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"var userLogs = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"false\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\").toDF(\"#id\",\"date\",\"idgroup\",\"group\",\"idsong\",\"song\")\r\n",
 					"userLogs.show()"
 				],
-				"execution_count": 134
+				"execution_count": 167
 			},
 			{
 				"cell_type": "code",
@@ -74,7 +74,7 @@
 					"var userLogsWithoutNull = userLogs.filter(line => line.getString(0) != null && line.getString(2) != null && line.getString(4) != null)\r\n",
 					"userLogsWithoutNull.show()"
 				],
-				"execution_count": 135
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -92,7 +92,7 @@
 				"source": [
 					"//userLogsDF = userLogsWithoutNull.toDF()"
 				],
-				"execution_count": 136
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"var user_country_sign = spark.sql(\"Select * from Usuarios_Continentes_Horoscopos\")\r\n",
 					"display(user_country_sign)"
 				],
-				"execution_count": 137
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -132,7 +132,7 @@
 					"var userGroupsJoin = user_country_sign.join(userLogs).filter(user_country_sign(\"id\") === userLogs(\"#id\"))\r\n",
 					"display(userGroupsJoin)"
 				],
-				"execution_count": 138
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -152,7 +152,7 @@
 					"var users_final_table = userGroupsJoin.select(\"id\", \"group\", \"song\", \"sign\")\r\n",
 					"display(users_final_table)"
 				],
-				"execution_count": 149
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -170,7 +170,7 @@
 				"source": [
 					"users_final_table.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"userMusic\").saveAsTable(\"userMusic\")"
 				],
-				"execution_count": 150
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -189,7 +189,7 @@
 				"source": [
 					"display(spark.sql(\"Select * from userMusic\"))"
 				],
-				"execution_count": 164
+				"execution_count": null
 			}
 		]
 	}

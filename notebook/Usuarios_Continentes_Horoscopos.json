@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9e35d412-40a1-4c72-bab4-5ee210b1a5a4"
+				"spark.autotune.trackingId": "425be42e-d4a7-400e-8ea5-fc7b2b951b9a"
 			}
 		},
 		"metadata": {
@@ -58,7 +58,7 @@
 					"var horoscope = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/horoscope.csv\")\r\n",
 					"display(horoscope)"
 				],
-				"execution_count": 35
+				"execution_count": 54
 			},
 			{
 				"cell_type": "code",
@@ -79,7 +79,7 @@
 					"var horoscope_sign = horoscope.select(\"sign\",\"date_range\")\r\n",
 					"display(horoscope_sign)"
 				],
-				"execution_count": 36
+				"execution_count": 55
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 					"split($\"date_range\",\" - \")(1).alias(\"date2\")).distinct()\r\n",
 					"display(horoscope_dates)"
 				],
-				"execution_count": 37
+				"execution_count": 56
 			},
 			{
 				"cell_type": "code",
@@ -124,7 +124,7 @@
 					"var horoscope_clean = horoscope_dates.withColumn(\"date1\",date_format(to_date(col(\"date1\"),\"MMM dd\"), \"dd/MM\")).withColumn(\"date2\",date_format(to_date(col(\"date2\"),\"MMM dd\"), \"dd/MM\"))\r\n",
 					"display(horoscope_clean)"
 				],
-				"execution_count": 38
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
 				],
-				"execution_count": 39
+				"execution_count": 58
 			},
 			{
 				"cell_type": "code",
@@ -164,7 +164,7 @@
 					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null)\r\n",
 					"countriesWithoutNull.show()"
 				],
-				"execution_count": 40
+				"execution_count": 59
 			},
 			{
 				"cell_type": "code",
@@ -184,7 +184,7 @@
 					"var countriesDF = countriesWithoutNull.toDF()\r\n",
 					"countriesDF.show()"
 				],
-				"execution_count": 41
+				"execution_count": 60
 			},
 			{
 				"cell_type": "code",
@@ -205,7 +205,7 @@
 					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
 					"display(userIds)"
 				],
-				"execution_count": 42
+				"execution_count": 61
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 					"var userIdWithoutNull = userIds.filter(line => line.getString(0) != null && line.getString(3) != null)\r\n",
 					"userIdWithoutNull.show()"
 				],
-				"execution_count": 43
+				"execution_count": 62
 			},
 			{
 				"cell_type": "code",
@@ -246,7 +246,7 @@
 					"var userIdWithBadDate = userIdWithoutNull.select(\"#id\",\"country\",\"registered\")\r\n",
 					"display(userIdWithBadDate)"
 				],
-				"execution_count": 44
+				"execution_count": 63
 			},
 			{
 				"cell_type": "code",
@@ -268,7 +268,7 @@
 					"var userId_clean = userIdWithBadDate.withColumn(\"registered\",date_format(to_date(col(\"registered\"),\"MMM dd, yyyy\"), \"dd/MM/yyyy\"))\r\n",
 					"display(userId_clean)"
 				],
-				"execution_count": 45
+				"execution_count": 64
 			},
 			{
 				"cell_type": "code",
@@ -288,7 +288,7 @@
 					"var userIdDF = userId_clean.toDF()\r\n",
 					"userIdDF.show()"
 				],
-				"execution_count": 46
+				"execution_count": 65
 			},
 			{
 				"cell_type": "code",
@@ -309,7 +309,7 @@
 					"var countries_join = userIdDF.join(countriesDF).filter(userIdDF(\"country\") === countriesDF(\"country\"))\r\n",
 					"display(countries_join)"
 				],
-				"execution_count": 47
+				"execution_count": 66
 			},
 			{
 				"cell_type": "code",
@@ -330,7 +330,7 @@
 					"var continentPerUser = countries_join.map(line =>  (line.getString(0),line.getString(8), line.getString(3), line.getString(2))).withColumnRenamed(\"_1\", \"User\").withColumnRenamed(\"_2\", \"Continent\").withColumnRenamed(\"_3\", \"Country\").withColumnRenamed(\"_4\", \"Date Registered\")\r\n",
 					"display(continentPerUser)"
 				],
-				"execution_count": 48
+				"execution_count": 67
 			},
 			{
 				"cell_type": "code",
@@ -371,7 +371,7 @@
 					"\r\n",
 					"}"
 				],
-				"execution_count": 49
+				"execution_count": 68
 			},
 			{
 				"cell_type": "code",
@@ -392,7 +392,7 @@
 					"var user_sign = continentPerUser.collect().map(line => Row(line(0), line(1), line(2), getSignNew(line(3).toString)))\r\n",
 					"user_sign"
 				],
-				"execution_count": 50
+				"execution_count": 69
 			},
 			{
 				"cell_type": "code",
@@ -417,7 +417,7 @@
 					"  }.toDF()\r\n",
 					"display(user_country_sign)"
 				],
-				"execution_count": 51
+				"execution_count": 70
 			},
 			{
 				"cell_type": "code",
@@ -433,9 +433,9 @@
 					}
 				},
 				"source": [
-					"user_country_sign.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"Usuarios_Continentes_Horoscopos\").saveAsTable(\"Usuarios_Continentes_Horoscopos\")"
+					"user_country_sign.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"user_continent_horoscope\").saveAsTable(\"user_continent_horoscope\")"
 				],
-				"execution_count": 52
+				"execution_count": 73
 			},
 			{
 				"cell_type": "code",
@@ -451,9 +451,9 @@
 					}
 				},
 				"source": [
-					"spark.sql(\"Select * from Usuarios_Continentes_Horoscopos\").show()"
+					"spark.sql(\"Select * from user_continent_horoscope\").show()"
 				],
-				"execution_count": 53
+				"execution_count": 74
 			}
 		]
 	}
