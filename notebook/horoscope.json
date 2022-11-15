@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "06fb682e-265b-43f0-b83c-0fbf743848ca"
+				"spark.autotune.trackingId": "307b09b2-46d8-421f-8342-70bbb3c5a4c3"
 			}
 		},
 		"metadata": {
@@ -58,7 +58,7 @@
 					"var horoscope = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/horoscope.csv\")\r\n",
 					"display(horoscope)"
 				],
-				"execution_count": 1
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -78,7 +78,7 @@
 					"var horoscope_sign = horoscope.select(\"sign\",\"date_range\")\r\n",
 					"display(horoscope_sign)"
 				],
-				"execution_count": 2
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -101,7 +101,7 @@
 					"split($\"date_range\",\" - \")(1).alias(\"date2\")).distinct()\r\n",
 					"display(horoscope_dates)"
 				],
-				"execution_count": 3
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +121,7 @@
 					"var horoscope_clean = horoscope_dates.withColumn(\"date1\",date_format(to_date(col(\"date1\"),\"MMM dd\"), \"dd/MM\")).withColumn(\"date2\",date_format(to_date(col(\"date2\"),\"MMM dd\"), \"dd/MM\"))\r\n",
 					"display(horoscope_clean)"
 				],
-				"execution_count": 4
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -139,7 +139,7 @@
 				"source": [
 					"horoscope_clean.printSchema"
 				],
-				"execution_count": 5
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -175,7 +175,7 @@
 					"     return dffilter.head.get(0).toString\r\n",
 					"}"
 				],
-				"execution_count": 6
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -196,7 +196,7 @@
 					"var date = format.parse(\"21/04/2022\")\r\n",
 					"getSign(date,horoscope_clean)"
 				],
-				"execution_count": 7
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -229,7 +229,7 @@
 					"     return dffilter.head.get(0).toString\r\n",
 					"}"
 				],
-				"execution_count": 8
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -247,7 +247,7 @@
 				"source": [
 					"horoscope_clean.printSchema"
 				],
-				"execution_count": 9
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -270,7 +270,7 @@
 					"    return format.parse(dateString)\r\n",
 					"}"
 				],
-				"execution_count": 10
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -290,7 +290,44 @@
 					"var horoscope_clean_date = horoscope_clean.withColumn(\"date1\", to_date(col(\"date1\"), \"dd/MM\")).withColumn(\"date2\", to_date(col(\"date2\"), \"dd/MM\"))\r\n",
 					"display(horoscope_clean_date)"
 				],
-				"execution_count": 34
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"horoscope_clean_date.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"horoscopePerUser\").saveAsTable(\"horoscopePerUser\")"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(spark.sql(\"Select * from horoscopePerUser\"))"
+				],
+				"execution_count": 27
 			}
 		]
 	}
