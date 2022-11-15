@@ -220,7 +220,7 @@
 					"collapsed": false
 				},
 				"source": [
-					"var continentPerUser = countries_join.map(line =>  (line.getString(0),line.getString(8), line.getString(3), line.getString(2))).withColumnRenamed(\"_1\", \"User\").withColumnRenamed(\"_2\", \"Continent\").withColumnRenamed(\"_3\", \"Country\").withColumnRenamed(\"_4\", \"Date_Registered\")\r\n",
+					"var continentPerUser = countries_join.map(line =>  (line.getString(0),line.getString(8), line.getString(3), line.getString(2))).withColumnRenamed(\"_1\", \"User\").withColumnRenamed(\"_2\", \"Continent\").withColumnRenamed(\"_3\", \"Country\").withColumnRenamed(\"_4\", \"Date Registered\")\r\n",
 					"display(continentPerUser)"
 				],
 				"execution_count": 9
