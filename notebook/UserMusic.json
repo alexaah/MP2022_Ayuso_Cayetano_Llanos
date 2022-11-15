@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "aahsynapsepool",
+			"referenceName": "aitorsparkpool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a400542f-204c-4872-ac5b-f20ea189f41e"
+				"spark.autotune.trackingId": "62afd4d3-0184-4cbe-8a8e-4a4599bae866"
 			}
 		},
 		"metadata": {
@@ -32,10 +32,10 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aahsynapsepool",
-				"name": "aahsynapsepool",
+				"id": "/subscriptions/f98c40cb-c627-4c43-9ac4-d10bb7b42e04/resourceGroups/RG_MASTER_OCT22_GROUP10/providers/Microsoft.Synapse/workspaces/synpasevca/bigDataPools/aitorsparkpool",
+				"name": "aitorsparkpool",
 				"type": "Spark",
-				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aahsynapsepool",
+				"endpoint": "https://synpasevca.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aitorsparkpool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -55,7 +55,7 @@
 					"var userLogs = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"false\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\").toDF(\"#id\",\"date\",\"idgroup\",\"group\",\"idsong\",\"song\")\r\n",
 					"userLogs.show()"
 				],
-				"execution_count": 167
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -74,25 +74,7 @@
 					"var userLogsWithoutNull = userLogs.filter(line => line.getString(0) != null && line.getString(2) != null && line.getString(4) != null)\r\n",
 					"userLogsWithoutNull.show()"
 				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"//userLogsDF = userLogsWithoutNull.toDF()"
-				],
-				"execution_count": null
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +94,7 @@
 					"var user_country_sign = spark.sql(\"Select * from Usuarios_Continentes_Horoscopos\")\r\n",
 					"display(user_country_sign)"
 				],
-				"execution_count": null
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -132,7 +114,7 @@
 					"var userGroupsJoin = user_country_sign.join(userLogs).filter(user_country_sign(\"id\") === userLogs(\"#id\"))\r\n",
 					"display(userGroupsJoin)"
 				],
-				"execution_count": null
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -152,7 +134,7 @@
 					"var users_final_table = userGroupsJoin.select(\"id\", \"group\", \"song\", \"sign\")\r\n",
 					"display(users_final_table)"
 				],
-				"execution_count": null
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -170,7 +152,7 @@
 				"source": [
 					"users_final_table.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"userMusic\").saveAsTable(\"userMusic\")"
 				],
-				"execution_count": null
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -189,7 +171,106 @@
 				"source": [
 					"display(spark.sql(\"Select * from userMusic\"))"
 				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"val jdbcUsername = \"sysadmin\"\r\n",
+					"val jdbcPassword = \"admin1234-\"\r\n",
+					"val jdbcHostname = \"group10sqlserver.database.windows.net\" //typically, this is in the form or servername.database.windows.net\r\n",
+					"val jdbcPort = 1433\r\n",
+					"val jdbcDatabase =\"practica2\""
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import java.util.Properties\r\n",
+					"\r\n",
+					"val jdbc_url = s\"jdbc:sqlserver://${jdbcHostname}:${jdbcPort};database=${jdbcDatabase};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=60;\"\r\n",
+					"val connectionProperties = new Properties()\r\n",
+					"connectionProperties.put(\"user\", s\"${jdbcUsername}\")\r\n",
+					"connectionProperties.put(\"password\", s\"${jdbcPassword}\")"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"users_final_table.createOrReplaceTempView(\"tempusergroups\")"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.sql(\"create table usergroups_hive2 as select * from tempusergroups\")"
+				],
 				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.table(\"usergroups_hive2\").write.jdbc(jdbc_url, \"userGroups\", connectionProperties)"
+				],
+				"execution_count": 31
 			}
 		]
 	}
