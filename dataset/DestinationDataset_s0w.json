@@ -1,0 +1,23 @@
+{
+	"name": "DestinationDataset_s0w",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Dlakesynapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "UserMusic",
+				"folderPath": "synapse",
+				"container": "synpasevca"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
