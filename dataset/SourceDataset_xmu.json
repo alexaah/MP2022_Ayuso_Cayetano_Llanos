@@ -1,0 +1,60 @@
+{
+	"name": "SourceDataset_xmu",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IngestBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "horoscope.csv",
+				"container": "ingestdata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "date_range",
+				"type": "String"
+			},
+			{
+				"name": "current_date",
+				"type": "String"
+			},
+			{
+				"name": "description",
+				"type": "String"
+			},
+			{
+				"name": "compatibility",
+				"type": "String"
+			},
+			{
+				"name": "mood",
+				"type": "String"
+			},
+			{
+				"name": "color",
+				"type": "String"
+			},
+			{
+				"name": "lucky_number",
+				"type": "String"
+			},
+			{
+				"name": "lucky_time",
+				"type": "String"
+			},
+			{
+				"name": "sign",
+				"type": "String"
+			}
+		]
+	}
+}
