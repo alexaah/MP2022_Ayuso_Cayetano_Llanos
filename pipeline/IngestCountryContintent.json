@@ -1,5 +1,5 @@
 {
-	"name": "CopyPipeline_svm",
+	"name": "IngestCountryContintent",
 	"properties": {
 		"activities": [
 			{
@@ -62,6 +62,42 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "TransformationCountry",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Copy_svm",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Countries",
+						"type": "NotebookReference"
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "vcaSparkpool",
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": null,
+					"conf": {
+						"spark.dynamicAllocation.enabled": true
+					},
+					"driverSize": null
+				}
 			}
 		],
 		"annotations": []
