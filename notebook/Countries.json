@@ -18,15 +18,15 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e88510e4-46ef-4ba3-852c-6d1f4b0f9c66"
+				"spark.autotune.trackingId": "876bc3fa-8e3b-4f6a-9a49-77226e464e99"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
 			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
+				"name": "synapse_spark",
+				"display_name": "scala"
 			},
 			"language_info": {
 				"name": "scala"
@@ -52,7 +52,7 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
+					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/synapse/countryContinent\")\r\n",
 					"countries.show()"
 				],
 				"execution_count": 28
