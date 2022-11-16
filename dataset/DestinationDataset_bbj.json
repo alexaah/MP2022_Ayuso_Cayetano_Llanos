@@ -1,0 +1,23 @@
+{
+	"name": "DestinationDataset_bbj",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Dlakesynapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "UsersFile",
+				"folderPath": "synapse",
+				"container": "synpasevca"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
