@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "10576451-30c4-453d-9366-b206a96b29d8"
+				"spark.autotune.trackingId": "e88510e4-46ef-4ba3-852c-6d1f4b0f9c66"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
 				],
-				"execution_count": 1
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -72,10 +72,145 @@
 					"collapsed": false
 				},
 				"source": [
-					"var countriesWithoutNull = countries.filter(line => line.getString(5) != null && line.getString(0) != null).toDF().select(\"country\", \"continent\")\r\n",
+					"var countriesWithoutNull = countries.distinct().filter(line => line.getString(5) != null && line.getString(0) != null).toDF().select(\"country\", \"continent\")\r\n",
 					"display(countriesWithoutNull)"
 				],
-				"execution_count": 2
+				"execution_count": 29
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"countriesWithoutNull.write.format(\"csv\").mode(\"overwrite\").option(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/\", \"continentsPerCountries\").saveAsTable(\"continentsPerCountries\")"
+				],
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.sql(\"Select * from continentsPerCountries\").show()"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"val jdbcUsername = \"sysadmin\"\r\n",
+					"val jdbcPassword = \"admin1234-\"\r\n",
+					"val jdbcHostname = \"group10sqlserver.database.windows.net\" //typically, this is in the form or servername.database.windows.net\r\n",
+					"val jdbcPort = 1433\r\n",
+					"val jdbcDatabase =\"practica2\""
+				],
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import java.util.Properties\r\n",
+					"\r\n",
+					"val jdbc_url = s\"jdbc:sqlserver://${jdbcHostname}:${jdbcPort};database=${jdbcDatabase};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=60;\"\r\n",
+					"val connectionProperties = new Properties()\r\n",
+					"connectionProperties.put(\"user\", s\"${jdbcUsername}\")\r\n",
+					"connectionProperties.put(\"password\", s\"${jdbcPassword}\")"
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"countriesWithoutNull.createOrReplaceTempView(\"tempContPerCountry\")"
+				],
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.sql(\"create table contPerCountry_hive as select * from tempContPerCountry\")"
+				],
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.table(\"contPerCountry_hive\").write.jdbc(jdbc_url, \"continentsPerCountries\", connectionProperties)"
+				],
+				"execution_count": 37
 			}
 		]
 	}
