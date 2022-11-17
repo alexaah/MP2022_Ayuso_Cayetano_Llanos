@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "19f71cd7-3b1f-4beb-abea-418739f3fd6b"
+				"spark.autotune.trackingId": "be0f16d2-cc4b-443e-a2b5-a9321f9b2723"
 			}
 		},
 		"metadata": {
@@ -58,7 +58,7 @@
 					"var horoscope = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/horoscope.csv\")\r\n",
 					"display(horoscope)"
 				],
-				"execution_count": 26
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -124,7 +124,7 @@
 					"var horoscope_clean = horoscope_dates.withColumn(\"date1\",date_format(to_date(col(\"date1\"),\"MMM dd\"), \"dd/MM\")).withColumn(\"date2\",date_format(to_date(col(\"date2\"),\"MMM dd\"), \"dd/MM\"))\r\n",
 					"display(horoscope_clean)"
 				],
-				"execution_count": 29
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"var countries = spark.sqlContext.read.option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/countryContinent.csv\")\r\n",
 					"countries.show()"
 				],
-				"execution_count": 30
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -205,7 +205,7 @@
 					"var userIds = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"true\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-profile.tsv\")\r\n",
 					"display(userIds)"
 				],
-				"execution_count": 33
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",

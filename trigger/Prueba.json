@@ -1,0 +1,17 @@
+{
+	"name": "Prueba",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2022-11-16T11:43:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
