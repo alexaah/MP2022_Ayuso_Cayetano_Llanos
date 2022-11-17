@@ -1,0 +1,60 @@
+{
+	"name": "SourceDataset_svm",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IngestBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "countryContinent.csv",
+				"container": "ingestdata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "country",
+				"type": "String"
+			},
+			{
+				"name": "code_2",
+				"type": "String"
+			},
+			{
+				"name": "code_3",
+				"type": "String"
+			},
+			{
+				"name": "country_code",
+				"type": "String"
+			},
+			{
+				"name": "iso_3166_2",
+				"type": "String"
+			},
+			{
+				"name": "continent",
+				"type": "String"
+			},
+			{
+				"name": "sub_region",
+				"type": "String"
+			},
+			{
+				"name": "region_code",
+				"type": "String"
+			},
+			{
+				"name": "sub_region_code",
+				"type": "String"
+			}
+		]
+	}
+}

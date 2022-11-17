@@ -1,0 +1,23 @@
+{
+	"name": "DestinationDataset_xmu",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Dlakesynapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "horoscope.csv",
+				"container": "synpasevca"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

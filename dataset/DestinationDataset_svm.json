@@ -1,0 +1,23 @@
+{
+	"name": "DestinationDataset_svm",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Dlakesynapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "countryContinent.csv",
+				"container": "synpasevca"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
