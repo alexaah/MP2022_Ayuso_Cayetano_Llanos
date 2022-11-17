@@ -11,7 +11,6 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "countryContinent.csv",
-				"folderPath": "synapse",
 				"container": "synpasevca"
 			},
 			"columnDelimiter": ",",
