@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Country_contintent",
+				"fileName": "countryContinent.csv",
 				"folderPath": "synapse",
 				"container": "synpasevca"
 			},
