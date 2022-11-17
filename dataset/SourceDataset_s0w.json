@@ -14,7 +14,6 @@
 				"container": "ingestdata"
 			},
 			"columnDelimiter": "\t",
-			"rowDelimiter": "\n",
 			"escapeChar": "\\",
 			"firstRowAsHeader": false,
 			"quoteChar": "\""
