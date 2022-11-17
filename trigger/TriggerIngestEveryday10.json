@@ -9,6 +9,12 @@
 					"referenceName": "IngestUserFile",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "IngestUserMusic",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
@@ -16,7 +22,7 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2022-11-17T08:42:00Z",
+				"startTime": "2022-11-17T10:00:00Z",
 				"timeZone": "UTC"
 			}
 		}
