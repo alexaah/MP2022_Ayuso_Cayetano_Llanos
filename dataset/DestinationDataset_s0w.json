@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "UserMusic",
+				"fileName": "userid-timestamp-artid-artname-traid-traname.tsv",
 				"folderPath": "synapse",
 				"container": "synpasevca"
 			},
