@@ -21,6 +21,12 @@
 					"referenceName": "IngestHoroscope",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "IngestCountryContintent",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
