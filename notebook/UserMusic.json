@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "62afd4d3-0184-4cbe-8a8e-4a4599bae866"
+				"spark.autotune.trackingId": "902efa80-7b3a-4587-b104-895bbd0f22d4"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"var userLogs = spark.sqlContext.read.option(\"delimiter\", \"\\t\").option(\"header\", \"false\").csv(\"abfss://synpasevca@synpasevca.dfs.core.windows.net/userid-timestamp-artid-artname-traid-traname.tsv\").toDF(\"#id\",\"date\",\"idgroup\",\"group\",\"idsong\",\"song\")\r\n",
 					"userLogs.show()"
 				],
-				"execution_count": 17
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
